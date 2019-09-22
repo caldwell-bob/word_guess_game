@@ -16,6 +16,7 @@
     <p id="losses-text"></p>
     <p id="wordDisplay-text"></p>
     <p id="lettersGuessed-text"></p>
+    <p id="guessesRemaining-text"></p>
   </div>
 
   <script type="text/javascript">
@@ -36,6 +37,7 @@
     var lossesText = document.getElementById("losses-text");
     var wordText = document.getElementById("wordDisplay-text");
     var lettersGuessedText = document.getElementById("lettersGuessed-text");
+    var guessesRemainingText = document.getElementById("guessesRemaining-text");
 
     // This function prints the letter place holder for the word to guess
     function initProgress(someWord) {
@@ -76,7 +78,7 @@
     }
 
     function upDatecorrectGuesses(correctGuesses, word, guess) {
-      // TODO account for extra spaces
+     
       console.log("correctGuesses -> " + correctGuesses);
       for (var i = 0; i <= correctGuesses.length; i++) {
         // console.log(word);
@@ -93,6 +95,7 @@
     }
     // Randomly chooses a word from the wordChoices array.
     var word = wordChoices[Math.floor(Math.random() * wordChoices.length)];
+    var guessRemaining = word.length;
 
     // tracks if we need to init the correctGuesses var
     var firstRun = true;
@@ -103,6 +106,18 @@
       // Determines which key was pressed.
       var userGuess = event.key;
       // console.log("userGuess: " + userGuess);
+
+      guessRemaining = guessRemaining - 1;
+
+      if (guessRemaining === 0) {
+        alert("Game Over!!!!");
+        losses ++;
+        // TODO create function to reset data vars, choose new word
+      }
+
+      
+
+
 
       if (firstRun) {
         correctGuesses = initProgress(word);
@@ -121,13 +136,16 @@
       // *************************** Display Content
       directionsText.textContent = "";
       // winsText.textContent = "wins: " + wins;
-      // lossesText.textContent = "losses: " + losses;
+      lossesText.textContent = "losses: " + losses;
       userChoiceText.textContent = "Letter Guessed: " + userGuess;
       computerChoiceText.textContent = "The word to guess is : " + word;
       wordText.textContent = "Guess the programming language: " + correctGuesses;
-      lettersGuessedText.textContent = "letters guessed: " + lettersGuessed;
+      lettersGuessedText.textContent = "Letters guessed: " + lettersGuessed;
+      guessesRemainingText.textContent = "Guesses remaining: " + guessRemaining;
 
-      // TODO call function --
+      
+
+      // TODO Special action on word guess
 
     };
   </script>
