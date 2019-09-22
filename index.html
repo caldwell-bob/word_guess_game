@@ -19,8 +19,7 @@
   </div>
 
   <script type="text/javascript">
-    // Creates an array that lists out all of the options (Rock, Paper, or Scissors).
-    var computerChoices = ["r", "p", "s"];
+    // Creates an array of word choice options
     var wordChoices = ["python", "ruby", "php", "perl", "javascript"];
     var lettersGuessed = "";
 
@@ -39,81 +38,96 @@
     var lettersGuessedText = document.getElementById("lettersGuessed-text");
 
     // This function prints the letter place holder for the word to guess
-    function placeholders(someWord){
-      theLine = "_ "
-      fullString = "";
-      for (i=0; i < someWord.length; i++){
-        fullString = fullString + theLine;
+    function initProgress(someWord) {
+      theLine = "_"
+      var fullString = [];
+      for (i = 0; i < someWord.length; i++) {
+        // fullString = fullString + theLine;
+        fullString[i] = theLine;
+        // console.log(fullString);
       }
       console.log(fullString);
+      console.log(typeof (fullString));
       return fullString;
     }
 
+    function updateProgress(guessTracker,theWord,theGuess){
+      var fullString = [];
+      fullString = guessTracker;
+      for (var i =0; i < theWord.length; i++){
+        if (theGuess == theWord[i]) {
+          console.log('Its a match at position ' + i + ' !!!')
+          fullString[i] =  theGuess;
+        }
+      }
+
+      return fullString;
+
+    }
+  
     // This function checks to see if letter pressed is in the word to guess or not
     function isLetterInWord(theUserGuess, theWord) {
       var isIn = false;
       if (theWord.includes(theUserGuess)) {
-        console.log(theUserGuess + " is in the word.")
+        // console.log(theUserGuess + " is in the word.")
         isIn = true;
       }
       return isIn;
     }
 
-    function upDatecorrectGuesses(correctGuesses,word, guess) {
+    function upDatecorrectGuesses(correctGuesses, word, guess) {
       // TODO account for extra spaces
       console.log("correctGuesses -> " + correctGuesses);
-      for (var i =0; i <= correctGuesses.length; i ++) {
-        console.log(word);
+      for (var i = 0; i <= correctGuesses.length; i++) {
+        // console.log(word);
         if (word[i] === guess) {
-          // correctGuesses[i]=guess;
-          correctGuesses = correctGuesses.replace(correctGuesses[i],guess)
-          console.log("Yes...I should replace " + correctGuesses[i] + " w the letter " + guess);
+          console.log(correctGuesses[i] + " " + guess);
+          correctGuesses = correctGuesses.replace(correctGuesses[i], guess);
+          console.log(correctGuesses[i] + " i = " + i);
+          console.log(correctGuesses);
+          // console.log("Yes...I should replace " + correctGuesses[i] + " w the letter " + guess);
         }
       }
-      console.log(correctGuesses);
+      // console.log(correctGuesses);
       return correctGuesses;
     }
-
+    // Randomly chooses a word from the wordChoices array.
     var word = wordChoices[Math.floor(Math.random() * wordChoices.length)];
+
+    // tracks if we need to init the correctGuesses var
     var firstRun = true;
 
-    // This function is run whenever the user presses a key.
+    // MAIN FUNCTION:  ran whenever the user presses a key.
     document.onkeyup = function (event) {
 
       // Determines which key was pressed.
       var userGuess = event.key;
-      console.log("userGuess: " + userGuess);
-      // Randomly chooses a word from the wordChoices array. 
-     
-      if (firstRun) {
-        correctGuesses = placeholders(word);
-        console.log("first run: " + correctGuesses.length);
-        firstRun = false;
-      }
-      
+      // console.log("userGuess: " + userGuess);
 
+      if (firstRun) {
+        correctGuesses = initProgress(word);
+        firstRun = false;
+        console.log("First run - correctGuess set to: " + correctGuesses);
+      }
 
       if (isLetterInWord(userGuess, word)) {
-        correctGuesses = upDatecorrectGuesses(correctGuesses, word, userGuess);
+        correctGuesses = updateProgress(correctGuesses, word, userGuess);
       } else {
         lettersGuessed += userGuess;
       }
 
-      // placeholders(word);
 
-      // Hide the directions
+
+      // *************************** Display Content
       directionsText.textContent = "";
-
-      // Display the user and computer guesses, and wins/losses/ties.
-      userChoiceText.textContent = "Letter Guessed: " + userGuess;
-      // computerChoiceText.textContent = "The computer chose: " + computerGuess;
-      computerChoiceText.textContent = "The word to guess is : " + word;
       // winsText.textContent = "wins: " + wins;
       // lossesText.textContent = "losses: " + losses;
+      userChoiceText.textContent = "Letter Guessed: " + userGuess;
+      computerChoiceText.textContent = "The word to guess is : " + word;
       wordText.textContent = "Guess the programming language: " + correctGuesses;
       lettersGuessedText.textContent = "letters guessed: " + lettersGuessed;
 
-    // TODO call function --
+      // TODO call function --
 
     };
   </script>
