@@ -20,6 +20,61 @@
   </div>
 
   <script type="text/javascript">
+
+    var wordGame = {
+      wins: 0,
+      losses: 0,
+      lettersGuessed: "",
+
+      directionsText: document.getElementById("directions-text"),
+      userChoiceText: document.getElementById("userchoice-text"),
+      winsText: document.getElementById("wins-text"),
+      lossesText: document.getElementById("losses-text"),
+      wordText: document.getElementById("wordDisplay-text"),
+      lettersGuessedText: document.getElementById("lettersGuessed-text"),
+      guessesRemainingText: document.getElementById("guessesRemaining-text"),
+
+      initProgress: function (someWord) {
+        theLine = "_"
+        var fullString = [];
+        for (i = 0; i < someWord.length; i++) {
+          // fullString = fullString + theLine;
+          fullString[i] = theLine;
+          // console.log(fullString);
+        }
+        console.log(fullString);
+        console.log(typeof (fullString));
+        return fullString;
+      },
+
+      updateProgress: function (guessTracker, theWord, theGuess) {
+        var fullString = [];
+        fullString = guessTracker;
+        for (var i = 0; i < theWord.length; i++) {
+          if (theGuess == theWord[i]) {
+            // console.log('Its a match at position ' + i + ' !!!')
+            fullString[i] = theGuess;
+          }
+        }
+        return fullString;
+      },
+
+      isLetterInWord: function (theUserGuess, theWord) {
+        var isIn = false;
+        if (theWord.includes(theUserGuess)) {
+          isIn = true;
+        }
+        return isIn;
+      },
+
+
+
+
+
+
+
+
+    }
     // Creates an array of word choice options
     var wordChoices = ["python", "ruby", "php", "perl", "javascript"];
     var lettersGuessed = "";
@@ -53,18 +108,18 @@
       return fullString;
     }
 
-    function updateProgress(guessTracker,theWord,theGuess){
+    function updateProgress(guessTracker, theWord, theGuess) {
       var fullString = [];
       fullString = guessTracker;
-      for (var i =0; i < theWord.length; i++){
+      for (var i = 0; i < theWord.length; i++) {
         if (theGuess == theWord[i]) {
           // console.log('Its a match at position ' + i + ' !!!')
-          fullString[i] =  theGuess;
+          fullString[i] = theGuess;
         }
       }
       return fullString;
     }
-  
+
     // This function checks to see if letter pressed is in the word to guess or not
     function isLetterInWord(theUserGuess, theWord) {
       var isIn = false;
@@ -82,8 +137,8 @@
       guessRemaining = 0;
 
       return theUserGuess, correctGuesses, lettersGuessed, guessRemaining;
-        }
-   
+    }
+
     // Randomly chooses a word from the wordChoices array.
     var word = wordChoices[Math.floor(Math.random() * wordChoices.length)];
     var guessRemaining = word.length;
@@ -102,7 +157,7 @@
 
       if (guessRemaining === 0) {
         alert("Game Over!!!!");
-        losses ++;
+        losses++;
         resetGame(userGuess, correctGuesses, lettersGuessed, guessRemaining)
         // TODO create function to reset data vars, choose new word
       }
@@ -120,12 +175,12 @@
       }
 
       if (correctGuesses.includes("_")) {
-       console.log("more guesses");
-       } else {
-         alert("You won!!!");
-         wins ++;
+        console.log("more guesses");
+      } else {
+        alert("You won!!!");
+        wins++;
         //  TODO need to call reset data set function...once created
-       }
+      }
 
       // *************************** Display Content
       directionsText.textContent = "";
@@ -137,7 +192,7 @@
       lettersGuessedText.textContent = "Letters guessed: " + lettersGuessed;
       guessesRemainingText.textContent = "Guesses remaining: " + guessRemaining;
 
-      
+
 
       // TODO Special action on word guess
 
