@@ -24,10 +24,14 @@
   <script type="text/javascript">
 
     var wordGame = {
+      word: "",
+      userGuess: "",
+      lettersGuessed: "",
+
       firstRun: true,
       wins: 0,
       losses: 0,
-      lettersGuessed: "",
+      
       wordChoices: ["python", "ruby", "php", "perl", "javascript"],
 
       directionsText: document.getElementById("directions-text"),
@@ -80,10 +84,10 @@
       },
 
       displayResults: function (userGuess, correctGuess) {
-        wordGame.directionsText.textContent = " ";
+        wordGame.directionsText.textContent = " Press any key to get started!";
         wordGame.winsText.textContent = "wins: " + wordGame.wins;
         wordGame.lossesText.textContent = "losses: " + wordGame.losses;
-        wordGame.userChoiceText.textContent = "Letter Guessed: " + userGuess;
+        wordGame.userChoiceText.textContent = "Letter Guessed: " + wordGame.userGuess;
         // wordGame.computerChoiceText.textContent = "The word to guess is : " + word;
         wordGame.wordText.textContent = "Guess the programming language: " + correctGuesses;
         wordGame.lettersGuessedText.textContent = "Letters guessed: " + wordGame.lettersGuessed;
@@ -93,11 +97,14 @@
 
       resetDisplay: function (userGuess, correctGuesses) {
         wordGame.lettersGuessed = "";
+        // userGuess = "";
+        wordGame.userGuess = "";
         wordGame.displayResults(userGuess, correctGuesses);
         wordGame.firstRun = true;
-        wordGame.directionsText.textContent = "Press any key to get started!";
+        // wordGame.directionsText.textContent = "Press A Key to Get Started!";
         guessRemaining = "";
-        userGuess = "";
+        // userGuess = "";
+       
       },
 
       playGame: function () {
@@ -105,45 +112,51 @@
         document.onkeyup = function (event) {
 
           // Determines which key was pressed.
-          var userGuess = event.key;
+          wordGame.userGuess = event.key;
+          console.log(wordGame.userGuess);
 
+          //TODO check for duplicate guesses
 
           if (wordGame.firstRun) {
-            word = wordGame.getWord();
-            guessRemaining = word.length;
-            correctGuesses = wordGame.initProgress(word);
+            wordGame.word = wordGame.getWord();
+            // guessRemaining = word.length;
+            guessRemaining = 12;
+            correctGuesses = wordGame.initProgress(wordGame.word);
             wordGame.firstRun = false;
             console.log("First run - correctGuess set to: " + correctGuesses);
           }
 
-          guessRemaining = guessRemaining - 1;
+          guessRemaining -= 1;
 
-          console.log("before calling isLetterInWord: word= " + word);
-          if (wordGame.isLetterInWord(userGuess, word)) {
-            correctGuesses = wordGame.updateProgress(correctGuesses, word, userGuess);
+          console.log("before calling isLetterInWord: word= " + wordGame.word);
+
+          if (wordGame.isLetterInWord(wordGame.userGuess, wordGame.word)) {
+            correctGuesses = wordGame.updateProgress(correctGuesses, wordGame.word, wordGame.userGuess);
             console.log("returning from isLetterInWord - correctGuesses: " + correctGuesses);
           } else {
-            wordGame.lettersGuessed += userGuess;
+            wordGame.lettersGuessed += wordGame.userGuess;
           }
 
           if (correctGuesses.includes("_")) {
             console.log("more guesses");
           } else {
-            alert("You won!!!");
             wordGame.wins++;
             correctGuesses = "";
             wordGame.resetDisplay();
+            wordGame.displayResults(wordGame.userGuess);
+            alert("You won!!!");
             //  TODO need to call reset data set function...once created
           }
 
           if (guessRemaining === 0) {
-            alert("Game Over!!!!");
             wordGame.losses++;
             correctGuesses = "";
-            wordGame.resetDisplay(userGuess, correctGuesses);
+            wordGame.resetDisplay(wordGame.userGuess, correctGuesses);
+            wordGame.displayResults(wordGame.userGuess);
+            alert("Game Over!!!!");
           }
 
-          wordGame.displayResults(userGuess);
+          wordGame.displayResults();
 
         }
       }
