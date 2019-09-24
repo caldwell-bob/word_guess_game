@@ -10,7 +10,10 @@
 
   <title>Word Guess Game</title>
   <style>
-   
+    * {
+      border: 1px solid red !important;
+    }
+
     /* https://css-tricks.com/old-timey-terminal-styling/ */
     body {
       background-color: black;
@@ -33,6 +36,10 @@
           rgba(black, 0.15) 1px,
           transparent 1px,
           transparent 2px);
+    }
+
+    #wordDisplay-text {
+      font-size: 45px;
     }
   </style>
 </head>
@@ -96,7 +103,8 @@
       lettersGuessedText: document.getElementById("lettersGuessed-text"),
       guessesRemainingText: document.getElementById("guessesRemaining-text"),
 
-      initProgress: function (someWord) {
+      initProgress: function () {
+        someWord = wordGame.word;
         theLine = "_"
         var fullString = [];
         for (i = 0; i < someWord.length; i++) {
@@ -137,25 +145,36 @@
         return word;
       },
 
-      displayResults: function () {
+
+      displayCorrectGuesses: function () {
+        prettyGuess = "";
+        for (var i = 0; i < wordGame.correctGuesses.length; i++) {
+          prettyGuess += " " + wordGame.correctGuesses[i];
+        }
+        return prettyGuess;
+      },
+
+      displayResults: function (correctGuesses) {
         wordGame.directionsText.textContent = " Press any key to get started!";
         wordGame.winsText.textContent = "wins: " + wordGame.wins;
         wordGame.lossesText.textContent = "losses: " + wordGame.losses;
         wordGame.userChoiceText.textContent = "Letter Guessed: " + wordGame.userGuess;
         // wordGame.computerChoiceText.textContent = "The word to guess is : " + word;
-        wordGame.wordText.textContent = "Guess the programming language: " + correctGuesses;
+
         wordGame.lettersGuessedText.textContent = "Letters guessed: " + wordGame.lettersGuessed;
         wordGame.guessesRemainingText.textContent = "Guesses remaining: " + wordGame.guessRemaining;
+        // wordGame.wordText.textContent = "Guess the programming language: " + (wordGame.correctGuesses).join(' ');
+        wordGame.wordText.textContent = "Guess: " + wordGame.displayCorrectGuesses();
 
       },
 
-      resetDisplay: function (userGuess, correctGuesses) {
+      resetDisplay: function (correctGuesses) {
         wordGame.lettersGuessed = "";
         wordGame.userGuess = "";
-        wordGame.displayResults(userGuess, correctGuesses);
+        wordGame.displayResults(correctGuesses);
         wordGame.firstRun = true;
         wordGame.guessRemaining = "";
-        
+
 
       },
 
@@ -173,7 +192,7 @@
           if (wordGame.lettersGuessed.includes(wordGame.userGuess)) {
             alert("You're repeating yourself..")
             return;
-          // checks if first run and if this is a repeated good guess
+            // checks if first run and if this is a repeated good guess
           } else if (!(wordGame.firstRun) && (wordGame.correctGuesses.includes(wordGame.userGuess))) {
             alert("Yeah...this is a known good guess..why repeat it?");
             return;
@@ -182,9 +201,9 @@
             if (wordGame.firstRun) {
               wordGame.word = wordGame.getWord();
               wordGame.guessRemaining = 12;
-              correctGuesses = wordGame.initProgress(wordGame.word);
+              wordGame.correctGuesses = wordGame.initProgress();
               wordGame.firstRun = false;
-              console.log("First run - correctGuess set to: " + correctGuesses);
+              console.log("First run - correctGuess set to: " + wordGame.correctGuesses);
             }
 
             wordGame.guessRemaining -= 1;
@@ -192,19 +211,19 @@
             console.log("before calling isLetterInWord: word= " + wordGame.word);
 
             if (wordGame.isLetterInWord(wordGame.userGuess, wordGame.word)) {
-              correctGuesses = wordGame.updateProgress(correctGuesses, wordGame.word, wordGame.userGuess);
-              console.log("returning from isLetterInWord - correctGuesses: " + correctGuesses);
+              wordGame.correctGuesses = wordGame.updateProgress(wordGame.correctGuesses, wordGame.word, wordGame.userGuess);
+              console.log("returning from isLetterInWord - correctGuesses: " + wordGame.correctGuesses);
             } else {
               wordGame.lettersGuessed += wordGame.userGuess;
               console.log("Bob -- " + wordGame.lettersGuessed);
             }
 
-            if (correctGuesses.includes("_")) {
+            if (wordGame.correctGuesses.includes("_")) {
               console.log("more guesses");
             } else {
               wordGame.wins++;
-              correctGuesses = "";
-              wordGame.resetDisplay();
+              wordGame.correctGuesses = "";
+              wordGame.resetDisplay(wordGame.correctGuesses);
               wordGame.displayResults(wordGame.userGuess);
               console.log("You won!!!");
               //  TODO need to call reset data set function...once created
@@ -212,8 +231,8 @@
 
             if (wordGame.guessRemaining === 0) {
               wordGame.losses++;
-              correctGuesses = "";
-              wordGame.resetDisplay(wordGame.userGuess, correctGuesses);
+              wordGame.correctGuesses = "";
+              wordGame.resetDisplay(wordGame.correctGuesses);
               wordGame.displayResults(wordGame.userGuess);
               console.log("Game Over!!!!");
             }
