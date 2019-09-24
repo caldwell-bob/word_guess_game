@@ -4,21 +4,73 @@
 
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+
+  <link href="https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap" rel="stylesheet">
 
   <title>Word Guess Game</title>
+  <style>
+   
+    /* https://css-tricks.com/old-timey-terminal-styling/ */
+    body {
+      background-color: black;
+      background-image: radial-gradient(rgba(0, 150, 0, 0.75), black 120%);
+      height: 100vh;
+      color: white;
+      font: 1.3rem Inconsolata, monospace;
+      text-shadow: 0 0 5px #C8C8C8;
+    }
+
+    body::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: repeating-linear-gradient(0deg,
+          rgba(black, 0.15),
+          rgba(black, 0.15) 1px,
+          transparent 1px,
+          transparent 2px);
+    }
+  </style>
 </head>
 
 <body>
 
-  <div>
-    <p id="directions-text">Press any key to get started!</p>
-    <p id="userchoice-text"></p>
-    <p id="computerchoice-text"></p>
-    <p id="wins-text"></p>
-    <p id="losses-text"></p>
-    <p id="wordDisplay-text"></p>
-    <p id="lettersGuessed-text"></p>
-    <p id="guessesRemaining-text"></p>
+
+  <div class="container">
+    <div class="row">
+      <div class="col"></div>
+      <div class="col-8">
+        <p id="directions-text">Press any key to get started!</p>
+      </div>
+      <div class="col"></div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <p id="wins-text"></p>
+        <p id="losses-text"></p>
+        <p id="guessesRemaining-text"></p>
+      </div>
+      <div class="col-8">
+
+
+      </div>
+      <div class="col">
+        <p id="userchoice-text"></p>
+        <p id="lettersGuessed-text"></p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col"></div>
+      <div class="col-8">
+        <p id="wordDisplay-text"></p>
+
+      </div>
+      <div class="col"></div>
+    </div>
   </div>
 
   <script type="text/javascript">
@@ -27,11 +79,13 @@
       word: "",
       userGuess: "",
       lettersGuessed: "",
+      correctGuesses: "",
+      guessRemaining: "",
 
       firstRun: true,
       wins: 0,
       losses: 0,
-      
+
       wordChoices: ["python", "ruby", "php", "perl", "javascript"],
 
       directionsText: document.getElementById("directions-text"),
@@ -68,10 +122,10 @@
         return fullString;
       },
 
-      isLetterInWord: function (theUserGuess, theWord) {
-        console.log("In isLetterInWord: theUserGuess: " + theUserGuess + " theWord: " + theWord);
+      isLetterInWord: function () {
+        console.log(wordGame.userGuess + " " + wordGame.word);
         var isIn = false;
-        if (theWord.includes(theUserGuess)) {
+        if (wordGame.word.includes(wordGame.userGuess)) {
           isIn = true;
         }
         return isIn;
@@ -83,7 +137,7 @@
         return word;
       },
 
-      displayResults: function (userGuess, correctGuess) {
+      displayResults: function () {
         wordGame.directionsText.textContent = " Press any key to get started!";
         wordGame.winsText.textContent = "wins: " + wordGame.wins;
         wordGame.lossesText.textContent = "losses: " + wordGame.losses;
@@ -91,72 +145,84 @@
         // wordGame.computerChoiceText.textContent = "The word to guess is : " + word;
         wordGame.wordText.textContent = "Guess the programming language: " + correctGuesses;
         wordGame.lettersGuessedText.textContent = "Letters guessed: " + wordGame.lettersGuessed;
-        wordGame.guessesRemainingText.textContent = "Guesses remaining: " + guessRemaining;
+        wordGame.guessesRemainingText.textContent = "Guesses remaining: " + wordGame.guessRemaining;
 
       },
 
       resetDisplay: function (userGuess, correctGuesses) {
         wordGame.lettersGuessed = "";
-        // userGuess = "";
         wordGame.userGuess = "";
         wordGame.displayResults(userGuess, correctGuesses);
         wordGame.firstRun = true;
-        // wordGame.directionsText.textContent = "Press A Key to Get Started!";
-        guessRemaining = "";
-        // userGuess = "";
-       
+        wordGame.guessRemaining = "";
+        
+
       },
 
+      // Main logic flow function = 
       playGame: function () {
 
         document.onkeyup = function (event) {
 
           // Determines which key was pressed.
           wordGame.userGuess = event.key;
-          console.log(wordGame.userGuess);
+          // console.log(wordGame.userGuess);
 
-          //TODO check for duplicate guesses
 
-          if (wordGame.firstRun) {
-            wordGame.word = wordGame.getWord();
-            // guessRemaining = word.length;
-            guessRemaining = 12;
-            correctGuesses = wordGame.initProgress(wordGame.word);
-            wordGame.firstRun = false;
-            console.log("First run - correctGuess set to: " + correctGuesses);
-          }
+          // Check if userGuess has been repeated
+          if (wordGame.lettersGuessed.includes(wordGame.userGuess)) {
+            alert("You're repeating yourself..")
+            return;
+          // checks if first run and if this is a repeated good guess
+          } else if (!(wordGame.firstRun) && (wordGame.correctGuesses.includes(wordGame.userGuess))) {
+            alert("Yeah...this is a known good guess..why repeat it?");
+            return;
 
-          guessRemaining -= 1;
-
-          console.log("before calling isLetterInWord: word= " + wordGame.word);
-
-          if (wordGame.isLetterInWord(wordGame.userGuess, wordGame.word)) {
-            correctGuesses = wordGame.updateProgress(correctGuesses, wordGame.word, wordGame.userGuess);
-            console.log("returning from isLetterInWord - correctGuesses: " + correctGuesses);
           } else {
-            wordGame.lettersGuessed += wordGame.userGuess;
+            if (wordGame.firstRun) {
+              wordGame.word = wordGame.getWord();
+              wordGame.guessRemaining = 12;
+              correctGuesses = wordGame.initProgress(wordGame.word);
+              wordGame.firstRun = false;
+              console.log("First run - correctGuess set to: " + correctGuesses);
+            }
+
+            wordGame.guessRemaining -= 1;
+
+            console.log("before calling isLetterInWord: word= " + wordGame.word);
+
+            if (wordGame.isLetterInWord(wordGame.userGuess, wordGame.word)) {
+              correctGuesses = wordGame.updateProgress(correctGuesses, wordGame.word, wordGame.userGuess);
+              console.log("returning from isLetterInWord - correctGuesses: " + correctGuesses);
+            } else {
+              wordGame.lettersGuessed += wordGame.userGuess;
+              console.log("Bob -- " + wordGame.lettersGuessed);
+            }
+
+            if (correctGuesses.includes("_")) {
+              console.log("more guesses");
+            } else {
+              wordGame.wins++;
+              correctGuesses = "";
+              wordGame.resetDisplay();
+              wordGame.displayResults(wordGame.userGuess);
+              console.log("You won!!!");
+              //  TODO need to call reset data set function...once created
+            }
+
+            if (wordGame.guessRemaining === 0) {
+              wordGame.losses++;
+              correctGuesses = "";
+              wordGame.resetDisplay(wordGame.userGuess, correctGuesses);
+              wordGame.displayResults(wordGame.userGuess);
+              console.log("Game Over!!!!");
+            }
+
+            wordGame.displayResults();
+
+
           }
 
-          if (correctGuesses.includes("_")) {
-            console.log("more guesses");
-          } else {
-            wordGame.wins++;
-            correctGuesses = "";
-            wordGame.resetDisplay();
-            wordGame.displayResults(wordGame.userGuess);
-            console.log("You won!!!");
-            //  TODO need to call reset data set function...once created
-          }
-
-          if (guessRemaining === 0) {
-            wordGame.losses++;
-            correctGuesses = "";
-            wordGame.resetDisplay(wordGame.userGuess, correctGuesses);
-            wordGame.displayResults(wordGame.userGuess);
-            console.log("Game Over!!!!");
-          }
-
-          wordGame.displayResults();
 
         }
       }
