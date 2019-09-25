@@ -37,9 +37,16 @@
           transparent 1px,
           transparent 2px);
     }
+    p {
+      text-align: center;
+    }
 
     #wordDisplay-text {
       font-size: 45px;
+    }
+
+    .sideBars {
+      height: 25em;;
     }
   </style>
 </head>
@@ -56,7 +63,7 @@
       <div class="col"></div>
     </div>
     <div class="row">
-      <div class="col">
+      <div class="col sideBars">
         <p id="wins-text"></p>
         <p id="losses-text"></p>
         <p id="guessesRemaining-text"></p>
@@ -65,8 +72,8 @@
 
 
       </div>
-      <div class="col">
-        <p id="userchoice-text"></p>
+      <div class="col sideBars">
+        <!-- <p id="userchoice-text"></p> -->
         <p id="lettersGuessed-text"></p>
       </div>
     </div>
@@ -94,10 +101,13 @@
       wins: 0,
       losses: 0,
 
+      
+      
+
       wordChoices: ["python", "ruby", "php", "perl", "javascript", "cobol", "fortran", "java", "swift"],
 
       directionsText: document.getElementById("directions-text"),
-      userChoiceText: document.getElementById("userchoice-text"),
+      // userChoiceText: document.getElementById("userchoice-text"),
       winsText: document.getElementById("wins-text"),
       lossesText: document.getElementById("losses-text"),
       wordText: document.getElementById("wordDisplay-text"),
@@ -157,7 +167,7 @@
         wordGame.directionsText.textContent = " Press any key to get started!";
         wordGame.winsText.textContent = "wins: " + wordGame.wins;
         wordGame.lossesText.textContent = "losses: " + wordGame.losses;
-        wordGame.userChoiceText.textContent = "Letter Guessed: " + wordGame.userGuess;
+        // wordGame.userChoiceText.textContent = "Letter Guessed: " + wordGame.userGuess;
         // wordGame.computerChoiceText.textContent = "The word to guess is : " + word;
 
         wordGame.lettersGuessedText.textContent = "Letters guessed: " + wordGame.lettersGuessed;
@@ -223,6 +233,7 @@
               wordGame.resetDisplay(wordGame.correctGuesses);
               wordGame.displayResults(wordGame.userGuess);
               console.log("You won!!!");
+              // wordGame.snd;
               
             }
 
