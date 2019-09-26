@@ -8,47 +8,10 @@
 
   <link href="https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap" rel="stylesheet">
 
+  <link rel="stylesheet" href="assets/css/style.css">
   <title>Word Guess Game</title>
-  <style>
-    * {
-      border: 1px solid red !important;
-    }
 
-    /* https://css-tricks.com/old-timey-terminal-styling/ */
-    body {
-      background-color: black;
-      background-image: radial-gradient(rgba(0, 150, 0, 0.75), black 120%);
-      height: 100vh;
-      color: white;
-      font: 1.3rem Inconsolata, monospace;
-      text-shadow: 0 0 5px #C8C8C8;
-    }
-
-    body::after {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: repeating-linear-gradient(0deg,
-          rgba(black, 0.15),
-          rgba(black, 0.15) 1px,
-          transparent 1px,
-          transparent 2px);
-    }
-    p {
-      text-align: center;
-    }
-
-    #wordDisplay-text {
-      font-size: 45px;
-    }
-
-    .sideBars {
-      height: 25em;;
-    }
-  </style>
+  
 </head>
 
 <body>
@@ -64,17 +27,24 @@
     </div>
     <div class="row">
       <div class="col sideBars">
-        <p id="wins-text"></p>
-        <p id="losses-text"></p>
-        <p id="guessesRemaining-text"></p>
+        <div id ="sideBarWrapper">
+            <p id ="spacer"></p>
+            <p id="wins-text"></p>
+            <p id="losses-text"></p>
+            <p id="guessesRemaining-text"></p>
+        </div>
+
       </div>
       <div class="col-8">
 
 
       </div>
       <div class="col sideBars">
+        <div id="sideBarWrapper">
+            <p id ="spacer-text"></p>
+            <p id="lettersGuessed-text"></p>
+        </div>
         <!-- <p id="userchoice-text"></p> -->
-        <p id="lettersGuessed-text"></p>
       </div>
     </div>
     <div class="row">
@@ -86,7 +56,7 @@
       <div class="col"></div>
     </div>
   </div>
-   <!-- TODO move css into .css file -->
+  
    <!-- TODO - move javascript data to .js file -->
   <script type="text/javascript">
 
@@ -113,6 +83,8 @@
       wordText: document.getElementById("wordDisplay-text"),
       lettersGuessedText: document.getElementById("lettersGuessed-text"),
       guessesRemainingText: document.getElementById("guessesRemaining-text"),
+      spacerText: document.getElementById("spacer-text"),
+      
 
       initProgress: function () {
         someWord = wordGame.word;
@@ -170,10 +142,12 @@
         // wordGame.userChoiceText.textContent = "Letter Guessed: " + wordGame.userGuess;
         // wordGame.computerChoiceText.textContent = "The word to guess is : " + word;
 
-        wordGame.lettersGuessedText.textContent = "Letters guessed: " + wordGame.lettersGuessed;
+        wordGame.lettersGuessedText.textContent = wordGame.lettersGuessed;
+        // TODO how to prevent this frome moving when too many letters guessed
+        wordGame.spacerText.textContent = "Letters guessed:";
         wordGame.guessesRemainingText.textContent = "Guesses remaining: " + wordGame.guessRemaining;
         // wordGame.wordText.textContent = "Guess the programming language: " + (wordGame.correctGuesses).join(' ');
-        wordGame.wordText.textContent = "Guess: " + wordGame.displayCorrectGuesses();
+        wordGame.wordText.textContent = wordGame.displayCorrectGuesses();
 
       },
 
