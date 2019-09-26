@@ -32,7 +32,22 @@
   #wordDisplay-text {
     font-size: 45px;
   }
+  .container {
+      padding-top: 5em;
+  }
 
   .sideBars {
-    height: 25em;;
+    padding-top: 5em;
+    height: 20em;;
+    display: inline-block;
+    text-align: center;
+  }
+
+  .spacer {
+      height:15em;
+  }
+
+  .sideBarWrapper{
+      background-color: blue;
+      text-align: center;
   }
